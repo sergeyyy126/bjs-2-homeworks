@@ -23,10 +23,6 @@ class AlarmClock {
     this.alarmCollection = this.alarmCollection.filter((item) => item.time !== time);
   }
 
-  // getCurrentFormattedTime(){
-  //   return this.alarmCollection.time;
-  // }
-
   getCurrentFormattedTime() {
     return new Date().toLocaleTimeString("ru-Ru", {
       hour: "2-digit",
@@ -39,20 +35,18 @@ class AlarmClock {
       return;
     }
  
-    const intervalId = setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.alarmCollection.forEach((alarm) => {
-        if (alarm.time !== this.getCurrentFormattedTime() && alarm.canCall === true) {
+        if (alarm.time === this.getCurrentFormattedTime() && alarm.canCall === true) {
           alarm.canCall = false;
           alarm.callback();
         }
       });
     }, 1000);
-
-    this.intervalId = intervalId;
   }
 
   stop() {
-    clearInterval();
+    clearInterval(this.intervalId);
     this.intervalId = null;
   }
 
@@ -63,17 +57,9 @@ class AlarmClock {
   }
 
   clearAlarms() {
-    stop();
+    this.stop();
     this.alarmCollection = [];
   }
 }
 
-let clock;
-clock = new AlarmClock();
-const callback = f => f;
 
-clock.addClock("23:49", callback);
-clock.addClock("23:50", callback);
-//clock.removeClock("16:45");
-clock.start();
-//console.log(clock);
